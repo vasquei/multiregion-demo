@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-Region Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #101820;
+      color: #f5f5f5;
+    }
+    .card {
+      background: #1b2631;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 700px;
+    }
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    pre {
+      background: #0d1117;
+      padding: 16px;
+      border-radius: 8px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Multi-Region Demo</h1>
+    <p>This frontend is deployed in one region and calls the API in the same region.</p>
+    <button onclick="loadMessage()">Call API</button>
+    <pre id="output">Click the button to call the API...</pre>
+  </div>
+
+  <script>
+    async function loadMessage() {
+      const output = document.getElementById("output");
+      output.textContent = "Loading...";
+
+      try {
+        const response = await fetch("/api/message");
+        const data = await response.json();
+        output.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        output.textContent = "Error: " + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
