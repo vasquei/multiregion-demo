@@ -15,41 +15,67 @@
       background: #1b2631;
       padding: 20px;
       border-radius: 12px;
-      max-width: 700px;
+      max-width: 900px;
     }
     button {
       padding: 10px 16px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
     }
     pre {
       background: #0d1117;
       padding: 16px;
       border-radius: 8px;
       overflow: auto;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>Multi-Region Demo</h1>
-    <p>This frontend is deployed in one region and calls the API in the same region.</p>
-    <button onclick="loadMessage()">Call API</button>
-    <pre id="output">Click the button to call the API...</pre>
+    <p>Frontend in Region A, API in Region A, Worker in Region B.</p>
+
+    <button onclick="callApi()">Test Frontend → API</button>
+    <button onclick="runWorkerJob()">Test Frontend → API → Worker</button>
+
+    <pre id="output">Click a button to test the flow...</pre>
   </div>
 
   <script>
-    async function loadMessage() {
+    async function callApi() {
       const output = document.getElementById("output");
-      output.textContent = "Loading...";
-
+      output.textContent = "Calling API...";
       try {
         const response = await fetch("/api/message");
         const data = await response.json();
         output.textContent = JSON.stringify(data, null, 2);
       } catch (error) {
-        output.textContent = "Error: " + error.message;
+        output.textContent = "Error calling API: " + error.message;
+      }
+    }
+
+    async function runWorkerJob() {
+      const output = document.getElementById("output");
+      output.textContent = "Calling API, which will call Worker in other region...";
+      try {
+        const response = await fetch("/api/run-job", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            test: "cross-region-call",
+            requestedAt: new Date().toISOString()
+          })
+        });
+        const data = await response.json();
+        output.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        output.textContent = "Error running cross-region job: " + error.message;
       }
     }
   </script>

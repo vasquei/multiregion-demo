@@ -21,4 +21,4 @@ spec:
             - name: REGION
               value: "region-a"
             - name: WORKER_URL
-              value: "http://207.211.190.124"
+              value: "http://136.248.106.128"

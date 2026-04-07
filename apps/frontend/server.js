@@ -10,6 +10,7 @@ const API_URL = process.env.API_URL || "http://api:8080";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/health", (req, res) => {
@@ -17,14 +18,6 @@ app.get("/health", (req, res) => {
     service: "frontend",
     status: "ok",
     region: REGION
-  });
-});
-
-app.get("/config", (req, res) => {
-  res.json({
-    service: "frontend",
-    region: REGION,
-    apiUrl: API_URL
   });
 });
 
@@ -40,6 +33,32 @@ app.get("/api/message", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: "Failed to call API service",
+      details: error.message,
+      frontendRegion: REGION
+    });
+  }
+});
+
+app.post("/api/run-job", async (req, res) => {
+  try {
+    const response = await fetch(`${API_URL}/jobs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(req.body || {})
+    });
+
+    const data = await response.json();
+
+    res.json({
+      frontendRegion: REGION,
+      flow: "frontend -> api -> worker",
+      result: data
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to trigger cross-region worker job",
       details: error.message,
       frontendRegion: REGION
     });

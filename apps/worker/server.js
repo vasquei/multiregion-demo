@@ -17,20 +17,13 @@ app.get("/health", (req, res) => {
 app.post("/process", (req, res) => {
   const body = req.body || {};
 
-  const result = {
+  res.json({
     service: "worker",
     workerRegion: REGION,
-    receivedAt: new Date().toISOString(),
+    processedAt: new Date().toISOString(),
     receivedPayload: body,
-    result: {
-      status: "processed",
-      summary: "The job was processed successfully in the remote region"
-    }
-  };
-
-  console.log("Processed job:", JSON.stringify(result, null, 2));
-
-  res.json(result);
+    result: "Job processed successfully in remote region"
+  });
 });
 
 app.listen(PORT, () => {

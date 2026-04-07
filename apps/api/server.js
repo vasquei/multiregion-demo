@@ -11,7 +11,8 @@ app.get("/health", (req, res) => {
   res.json({
     service: "api",
     status: "ok",
-    region: REGION
+    region: REGION,
+    workerUrl: WORKER_URL
   });
 });
 
@@ -30,12 +31,12 @@ app.post("/jobs", async (req, res) => {
   if (!WORKER_URL) {
     return res.status(500).json({
       error: "WORKER_URL is not configured",
-      region: REGION
+      apiRegion: REGION
     });
   }
 
   try {
-    const response = await fetch(`${WORKER_URL}/process`, {
+    const response = await fetch(`${WORKER_URL}:${PORT}/process`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -47,17 +48,23 @@ app.post("/jobs", async (req, res) => {
       })
     });
 
-    const data = await response.json();
+    const workerData = await response.json();
 
     res.json({
+      success: true,
       apiRegion: REGION,
-      workerResponse: data
+      workerCalled: true,
+      workerUrl: WORKER_URL,
+      workerResponse: workerData
     });
   } catch (error) {
     res.status(500).json({
+      success: false,
+      apiRegion: REGION,
+      workerCalled: false,
+      workerUrl: WORKER_URL,
       error: "Failed to call worker service",
-      details: error.message,
-      apiRegion: REGION
+      details: error.message
     });
   }
 });
