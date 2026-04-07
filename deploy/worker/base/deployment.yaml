@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: ghcr.io/YOUR_GITHUB_USER/worker:latest
+          image: iad.ocir.io/idozijgcstuv/repo/worker:latest
           ports:
             - containerPort: 8080
           env:

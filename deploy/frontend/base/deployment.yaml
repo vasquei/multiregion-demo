@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/YOUR_GITHUB_USER/frontend:latest
+          image: iad.ocir.io/idozijgcstuv/repo/frontend:latest
           ports:
             - containerPort: 8080
           env:

@@ -14,11 +14,11 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/YOUR_GITHUB_USER/api:latest
+          image: iad.ocir.io/idozijgcstuv/repo/api:latest 
           ports:
             - containerPort: 8080
           env:
             - name: REGION
               value: "region-a"
             - name: WORKER_URL
-              value: "http://worker.region-b.example.com"
+              value: "http://207.211.190.124"
